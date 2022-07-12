@@ -1,30 +1,26 @@
-import React ,{useState,useEffect} from 'react'
-import store from '../../store/store'
+import React, { useState, useEffect } from "react";
+
+//Voir pour utilisation CONNECT de react-
+import { useSelector, useDispatch } from "react-redux";
+
+import { addCount, resetCount, addTodo } from "../../redux/actionCompteur";
 const Compteur = () => {
-    const [count, setCount] = useState(0)
+	const count = useSelector((state) => state.count);
+	const todos = useSelector((state) => state.todos);
+	const dispatch = useDispatch(addCount, resetCount, addTodo);
 
-    useEffect(() => {
-		store.subscribe(() => {
-      //store.getState().todos recupere le state global 
-			console.log("todos from compteur");
-			console.log(store.getState());
-            setCount(store.getState().count)
-		});
-	}, []);
+	return (
+		<div>
+			<br />
+			Count = {count}
+			<br />
+			todos = {todos}
+			<br />
+			<button onClick={() => dispatch(addCount())}>add count</button>
+			<button onClick={() => dispatch(resetCount())}>Reset Compteur</button>
+			<button onClick={() => dispatch(addTodo(Math.random()))}>Add todo</button>
+		</div>
+	);
+};
 
-const handleCount=()=>{
-    store.dispatch({
-        type:"ADD_COUNT"
-    })
-    
-}
-    return (
-        <div>
-            Count = {count}
-            <button onClick={handleCount} >click Me</button>
-            <button onClick={()=>setCount(0)} >Reset Compteur</button>
-        </div>
-    )
-}
-
-export default Compteur
+export default Compteur;
